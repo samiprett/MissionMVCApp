@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Add Movie Form";
+}
+
+@model  MissionMVCApp.Models.AddMovieSubmission
+
+<h1>Add Movie to Collection here!</h1>
+
+<div>
+    <form method="post">
+        <label asp-for="Title">Title:</label>
+        <input asp-for="Title" /><br />
+
+        <label asp-for="Category">Category</label>
+        <select asp-for="Category">
+            <option value="Action/Adventure">Action/Adventure</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Drama">Drama</option>
+            <option value="Horror/Suspense">Horror/Suspense</option>
+            <option value="Miscellaneous">Miscellaneous</option>
+            <option value="Family">Family</option>
+            <option value="Television">Televison</option>
+            <option value="VHS">VHS</option>
+        </select><br />
+
+        <label asp-for="Year">Year:</label>
+        <input asp-for="Year" /><br />
+
+        <label asp-for="Director">Director:</label>
+        <input asp-for="Director" /><br />
+
+        <label asp-for="Rating">Rating</label>
+        <select asp-for="Rating">
+            <option value="PG">PG</option>
+            <option value="PG13">PG-13</option>
+            <option value="R">R</option>
+            <option value="NR">NR</option>
+            <option value="TV14">TV-14</option>
+            <option value="TVPG">TV-PG</option>
+            <option value="TVY7">TV-Y7</option>
+            <option value="UR">UR</option>
+        </select><br />
+
+        <label asp-for="Edited">Edited? (check for yes)</label>
+        <select asp-for="Edited">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select><br />
+
+        <label asp-for="LentTo">Lent to:</label>
+        <input asp-for="LentTo" /><br />
+
+        <label asp-for="Notes">Notes:</label>
+        <input asp-for="Notes" /><br />
+
+        <button type="submit">Add Movie</button>
+    </form>
+</div>
