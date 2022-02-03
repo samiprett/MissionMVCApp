@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MissionMVCApp.Models;
 using System;
@@ -11,12 +12,10 @@ namespace MissionMVCApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private MovieInfoContext myContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, MovieInfoContext someName)
+        public HomeController(MovieInfoContext someName)
         {
-            _logger = logger;
             myContext = someName;
         }
 
@@ -25,9 +24,39 @@ namespace MissionMVCApp.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult ViewMovies()
         {
-            return View();
+            var movies = myContext.responses
+                .Include(x => x.Category)
+                .OrderBy(x => x.CategoryID)
+                .ToList();
+
+            return View(movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit (int movieid)
+        {
+            ViewBag.Categories = myContext.Category.ToList();
+            var movie = myContext.responses.Single(x => x.MovieID == movieid);
+            return View("AddMovie", movie);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(AddMovieSubmission ams)
+        {
+            //if (ModelState.IsValid)
+            //{
+                myContext.Update(ams);
+                myContext.SaveChanges();
+                return RedirectToAction("ViewMovies");
+            //}
+            //else  //invalid entry
+            //{
+            //    ViewBag.Categories = myContext.Category.ToList();
+            //    return View(ams);
+            //}
         }
 
         public IActionResult FindPodcast()
@@ -38,21 +67,41 @@ namespace MissionMVCApp.Controllers
         [HttpGet]
         public IActionResult AddMovie()
         {
+            ViewBag.Categories = myContext.Category.ToList();
+
             return View();
         }
 
         [HttpPost]
         public IActionResult AddMovie(AddMovieSubmission am)
         {
-            myContext.Add(am);
-            myContext.SaveChanges();
-            return View("Confirmation", am);
+            if (ModelState.IsValid)
+            {
+                myContext.Add(am);
+                myContext.SaveChanges();
+                return View("Confirmation", am);
+            }
+            else
+            {
+                ViewBag.Categories = myContext.Category.ToList();
+                return View(am);
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public IActionResult Delete(int movieid)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var movie = myContext.responses.Single(x => x.MovieID == movieid);
+            return View(movie);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(AddMovieSubmission hi)
+        {
+            myContext.responses.Remove(hi);
+            myContext.SaveChanges();
+
+            return RedirectToAction("ViewMovies");
         }
     }
 }

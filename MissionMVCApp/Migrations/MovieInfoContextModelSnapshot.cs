@@ -21,10 +21,11 @@ namespace MissionMVCApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Edited")
@@ -37,9 +38,11 @@ namespace MissionMVCApp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Rating")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<ushort>("Year")
@@ -47,13 +50,15 @@ namespace MissionMVCApp.Migrations
 
                     b.HasKey("MovieID");
 
+                    b.HasIndex("CategoryID");
+
                     b.ToTable("responses");
 
                     b.HasData(
                         new
                         {
                             MovieID = 1,
-                            Category = "Family",
+                            CategoryID = 1,
                             Director = "Brenda Chapman and Mark Andrews",
                             Edited = false,
                             LentTo = "",
@@ -65,7 +70,7 @@ namespace MissionMVCApp.Migrations
                         new
                         {
                             MovieID = 2,
-                            Category = "Family",
+                            CategoryID = 1,
                             Director = "Nathan Greno and Byron Howard",
                             Edited = false,
                             LentTo = "",
@@ -77,7 +82,7 @@ namespace MissionMVCApp.Migrations
                         new
                         {
                             MovieID = 3,
-                            Category = "Comedy",
+                            CategoryID = 2,
                             Director = "Jessica Bendinger",
                             Edited = false,
                             LentTo = "",
@@ -86,6 +91,71 @@ namespace MissionMVCApp.Migrations
                             Title = "Stick It",
                             Year = (ushort)2006
                         });
+                });
+
+            modelBuilder.Entity("MissionMVCApp.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryID");
+
+                    b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Action/Adventure"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryID = 3,
+                            CategoryName = "Drama"
+                        },
+                        new
+                        {
+                            CategoryID = 4,
+                            CategoryName = "Family"
+                        },
+                        new
+                        {
+                            CategoryID = 5,
+                            CategoryName = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryID = 6,
+                            CategoryName = "Miscellaneous"
+                        },
+                        new
+                        {
+                            CategoryID = 7,
+                            CategoryName = "Television"
+                        },
+                        new
+                        {
+                            CategoryID = 8,
+                            CategoryName = "VHS"
+                        });
+                });
+
+            modelBuilder.Entity("MissionMVCApp.Models.AddMovieSubmission", b =>
+                {
+                    b.HasOne("MissionMVCApp.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

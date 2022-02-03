@@ -11,18 +11,21 @@ namespace MissionMVCApp.Models
         [Key]
         [Required]
         public int MovieID { get; set; }
-        [Required]
-        public string Category { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please enter Title")]
         public string Title { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please enter Year")]
         public ushort Year { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please enter Director")]
         public string Director { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please select Rating")]
         public string Rating { get; set; }
         public bool Edited { get; set; }
         public string LentTo { get; set; }
         public string Notes { get; set; }
+
+
+        [Required(ErrorMessage = "Please select Category")]
+        public int CategoryID { get; set; }
+        public Category Category { get; set; }
     }
 }
